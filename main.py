@@ -1,11 +1,10 @@
-from fastapi import FastAPI, Query
+from fastapi import FastAPI, Request
 import requests
 
 app = FastAPI()
 
-# Your Telegram bot token and chat_id
-TELEGRAM_TOKEN = "8021458974:AAH_U6vWbr877Cv669Ig88MFqWVUWZtf5Mk"
-CHAT_ID = "5609562789"  # Your Telegram user ID or group ID
+TELEGRAM_TOKEN = "YOUR_BOT_TOKEN"
+CHAT_ID = "YOUR_CHAT_ID"
 
 def send_telegram_message(message: str):
     url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
@@ -15,16 +14,14 @@ def send_telegram_message(message: str):
         return response.json()
     except Exception as e:
         return {"error": str(e)}
+
 @app.get("/")
 def read_root():
     return {"message": "Hello, World!"}
 
-@app.get("/ping")
-def read_root():
-    return {"status": "OK"}
-
-@app.get("/alerts")
-def receive_alert(alert: str = Query(..., description="Alert message from TV")):
-    # Send alert to Telegram
-    telegram_response = send_telegram_message(alert)
-    return {"status": "sent", "telegram_response": telegram_response}
+@app.post("/alerts")
+async def receive_alert(request: Request):
+    data = await request.json()
+    alert_message = data.get("alert", "No message received")
+    telegram_response = send_telegram_message(alert_message)
+    return {"status": "sent", "alert": alert_message, "telegram_response": telegram_response}
