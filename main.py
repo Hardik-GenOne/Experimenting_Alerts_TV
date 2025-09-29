@@ -19,6 +19,10 @@ def send_telegram_message(message: str):
 def read_root():
     return {"message": "Hello, World!"}
 
+@app.get("/ping")
+def read_root():
+    return {"status": "OK"}
+
 @app.get("/alerts")
 def receive_alert(alert: str = Query(..., description="Alert message from TV")):
     # Send alert to Telegram
