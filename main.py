@@ -19,6 +19,11 @@ def send_telegram_message(message: str):
 def read_root():
     return {"message": "Hello, World!"}
 
+
+@app.get("/ping")
+def read_root():
+    return {"status": "OK"}
+
 @app.post("/alerts")
 async def receive_alert(request: Request):
     data = await request.json()
