@@ -3,8 +3,8 @@ import requests
 
 app = FastAPI()
 
-TELEGRAM_TOKEN = "YOUR_BOT_TOKEN"
-CHAT_ID = "YOUR_CHAT_ID"
+TELEGRAM_TOKEN = "8021458974:AAH_U6vWbr877Cv669Ig88MFqWVUWZtf5Mk"
+CHAT_ID = "5609562789"  # Your Telegram user ID or group ID
 
 def send_telegram_message(message: str):
     url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
