@@ -16,17 +16,26 @@ def send_telegram_message(message: str):
         return {"error": str(e)}
 
 @app.get("/")
-def read_root():
+def home():
     return {"message": "Hello, World!"}
 
-
 @app.get("/ping")
-def read_root():
+def ping():
     return {"status": "OK"}
 
 @app.post("/alerts")
 async def receive_alert(request: Request):
-    data = await request.json()
-    alert_message = data.get("alert", "No message received")
+    try:
+        data = await request.json()  # try parse JSON
+    except:
+        body = await request.body()  # fallback to raw text
+        data = {"raw": body.decode("utf-8")}
+
+    # Pick message safely
+    if isinstance(data, dict):
+        alert_message = data.get("alert") or str(data)
+    else:
+        alert_message = str(data)
+
     telegram_response = send_telegram_message(alert_message)
     return {"status": "sent", "alert": alert_message, "telegram_response": telegram_response}
